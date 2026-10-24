@@ -19,10 +19,10 @@ body{min-height:100vh}.queue-page{max-width:1500px;margin:0 auto;padding:30px 34
 <main class="queue-page">
 <header class="queue-page-top">
 <div><div class="queue-brand"><div class="queue-brand-mark">S✳</div><div><div class="queue-brand-name">serveflow</div><div class="queue-brand-sub">FOOD SERVICE OS · LIVE QUEUE</div></div></div>
-<div style="margin-top:25px"><h1>Live Order Queue</h1><p class="page-intro">Track preparation, pickup, and completed orders on a dedicated screen.</p></div></div>
+<div style="margin-top:25px"><h1>Live Order Queue</h1><p class="page-intro">Customer-facing monitor · View order progress at a glance. Statuses are managed by staff in the admin dashboard.</p></div></div>
 <a class="btn btn-light queue-back" href="/">← Back to dashboard</a>
 </header>
-<div class="queue-live-strip"><span class="queue-live-dot"></span><div><strong>Live demo simulation</strong><span>Queue updates automatically while this page is open · mock data only</span></div><span class="queue-updated" id="updated">Updated just now</span></div>
+<div class="queue-live-strip"><span class="queue-live-dot"></span><div><strong>Live demo simulation</strong><span>Mock orders appear immediately · read-only display</span></div><span class="queue-updated" id="updated">Updated just now</span></div>
 <div class="stats-grid" id="stats"></div>
 <div class="queue-board" id="board"></div>
 <div class="queue-note">Standalone /queue endpoint. This demo runs in your browser only; order changes are not shared with other devices and are not saved to a database.</div>
@@ -42,17 +42,17 @@ function saveOrders(){try{localStorage.setItem(ORDER_STORAGE_KEY,JSON.stringify(
 window.addEventListener("storage",e=>{if(e.key===ORDER_STORAGE_KEY){orders=loadOrders();render()}});
 const money=n=>new Intl.NumberFormat("en-PH",{style:"currency",currency:"PHP",maximumFractionDigits:0}).format(n);
 const badge=s=>'<span class="status-badge '+({Completed:"badge-ready",Ready:"badge-ready",Preparing:"badge-pending"}[s]||"badge-low")+'">'+s+'</span>';
-function setStatus(id,status){const o=orders.find(x=>x.id===id);if(!o)return;o.status=status;saveOrders();render();document.getElementById("updated").textContent="Updated at "+new Date().toLocaleTimeString("en-PH",{hour:"2-digit",minute:"2-digit",second:"2-digit"})}
+function updateTimestamp(){document.getElementById("updated").textContent="Updated at "+new Date().toLocaleTimeString("en-PH",{hour:"2-digit",minute:"2-digit",second:"2-digit"})}
 function render(){
  const preparing=orders.filter(o=>o.status==="Preparing"),ready=orders.filter(o=>o.status==="Ready"),done=orders.filter(o=>o.status==="Completed"),active=preparing.length+ready.length;
  const stats=[["◷","Active orders",active,"In preparation or ready","blue"],["⌛","Preparing",preparing.length,"Kitchen working","orange"],["✓","Ready for pickup",ready.length,"Awaiting handoff","green"],["▣","Completed today",done.length,"Finished orders","purple"]];
  document.getElementById("stats").innerHTML=stats.map(s=>'<div class="card stat-card"><div class="stat-top"><span class="stat-label">'+s[1]+'</span><span class="stat-icon icon-'+s[4]+'">'+s[0]+'</span></div><div class="stat-value">'+s[2]+'</div><div class="stat-foot">'+s[3]+'</div></div>').join("");
- const card=o=>'<article class="queue-order"><div class="queue-order-top"><strong>'+o.id+'</strong>'+badge(o.status)+'</div><div class="queue-customer">'+o.customer+'</div><div class="queue-meta"><span>'+o.items+' item'+(o.items===1?"":"s")+'</span><span>'+o.time+'</span></div><div class="queue-total">'+money(o.total)+'</div><div class="queue-actions">'+(o.status==="Preparing"?'<button class="btn btn-primary btn-small" onclick="setStatus(\''+o.id+'\',\'Ready\')">Mark ready →</button>':o.status==="Ready"?'<button class="btn btn-primary btn-small" onclick="setStatus(\''+o.id+'\',\'Completed\')">Complete order ✓</button>':'<span class="muted">No action needed</span>')+'</div></article>';
+ const card=o=>'<article class="queue-order"><div class="queue-order-top"><strong>'+o.id+'</strong>'+badge(o.status)+'</div><div class="queue-customer">'+o.customer+'</div><div class="queue-meta"><span>'+o.items+' item'+(o.items===1?"":"s")+'</span><span>'+o.time+'</span></div><div class="queue-total">'+money(o.total)+'</div></article>';
  const lanes=[["preparing","⌛","Preparing","Kitchen in progress",preparing],["ready","✓","Ready for pickup","Waiting for customer",ready],["done","▣","Completed","Recently finished",done]];
  document.getElementById("board").innerHTML=lanes.map(l=>'<section class="queue-lane"><div class="queue-lane-head"><span class="queue-lane-icon '+l[0]+'">'+l[1]+'</span><div><strong>'+l[2]+'</strong><span>'+l[3]+'</span></div><b>'+l[4].length+'</b></div><div class="queue-lane-body">'+(l[4].map(card).join("")||'<div class="queue-empty">No orders in this lane</div>')+'</div></section>').join("");
 }
 render();
-setInterval(()=>{let next=orders.find(o=>o.status==="Preparing");if(next)next.status="Ready";else{next=orders.find(o=>o.status==="Ready");if(next)next.status="Completed"}if(next){saveOrders();render();document.getElementById("updated").textContent="Updated at "+new Date().toLocaleTimeString("en-PH",{hour:"2-digit",minute:"2-digit",second:"2-digit"})}},15000);
+setInterval(()=>{orders=loadOrders();render();updateTimestamp()},3000);
 </script>
 </body></html>`);
 }
