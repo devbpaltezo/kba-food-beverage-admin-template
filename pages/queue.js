@@ -28,16 +28,21 @@ body{min-height:100vh}.queue-page{max-width:1500px;margin:0 auto;padding:30px 34
 <div class="queue-note">Standalone /queue endpoint. This demo runs in your browser only; order changes are not shared with other devices and are not saved to a database.</div>
 </main>
 <script>
-const orders=[
-{id:"ORD-1048",customer:"Walk-in customer",items:2,total:320,status:"Preparing",time:"10:42 AM"},
-{id:"ORD-1047",customer:"Jamie Cruz",items:3,total:475,status:"Ready",time:"10:35 AM"},
-{id:"ORD-1046",customer:"Mia Santos",items:1,total:225,status:"Completed",time:"10:22 AM"},
-{id:"ORD-1045",customer:"Alex Rivera",items:4,total:615,status:"Preparing",time:"10:16 AM"},
-{id:"ORD-1044",customer:"Sam Dela Rosa",items:2,total:300,status:"Completed",time:"10:08 AM"}
+const ORDER_STORAGE_KEY="serveflow-demo-orders-v1";
+const initialOrders=[
+{id:"ORD-1048",customer:"Walk-in customer",items:2,total:320,status:"Preparing",time:"10:42 AM",channel:"Counter"},
+{id:"ORD-1047",customer:"Jamie Cruz",items:3,total:475,status:"Ready",time:"10:35 AM",channel:"Pickup"},
+{id:"ORD-1046",customer:"Mia Santos",items:1,total:225,status:"Completed",time:"10:22 AM",channel:"Dine-in"},
+{id:"ORD-1045",customer:"Alex Rivera",items:4,total:615,status:"Preparing",time:"10:16 AM",channel:"Pickup"},
+{id:"ORD-1044",customer:"Sam Dela Rosa",items:2,total:300,status:"Completed",time:"10:08 AM",channel:"Dine-in"}
 ];
+function loadOrders(){try{const saved=localStorage.getItem(ORDER_STORAGE_KEY);if(saved){const parsed=JSON.parse(saved);if(Array.isArray(parsed)&&parsed.length)return parsed}}catch(e){}return initialOrders.map(o=>({...o}))}
+let orders=loadOrders();
+function saveOrders(){try{localStorage.setItem(ORDER_STORAGE_KEY,JSON.stringify(orders))}catch(e){}}
+window.addEventListener("storage",e=>{if(e.key===ORDER_STORAGE_KEY){orders=loadOrders();render()}});
 const money=n=>new Intl.NumberFormat("en-PH",{style:"currency",currency:"PHP",maximumFractionDigits:0}).format(n);
 const badge=s=>'<span class="status-badge '+({Completed:"badge-ready",Ready:"badge-ready",Preparing:"badge-pending"}[s]||"badge-low")+'">'+s+'</span>';
-function setStatus(id,status){const o=orders.find(x=>x.id===id);if(!o)return;o.status=status;render();document.getElementById("updated").textContent="Updated at "+new Date().toLocaleTimeString("en-PH",{hour:"2-digit",minute:"2-digit",second:"2-digit"})}
+function setStatus(id,status){const o=orders.find(x=>x.id===id);if(!o)return;o.status=status;saveOrders();render();document.getElementById("updated").textContent="Updated at "+new Date().toLocaleTimeString("en-PH",{hour:"2-digit",minute:"2-digit",second:"2-digit"})}
 function render(){
  const preparing=orders.filter(o=>o.status==="Preparing"),ready=orders.filter(o=>o.status==="Ready"),done=orders.filter(o=>o.status==="Completed"),active=preparing.length+ready.length;
  const stats=[["◷","Active orders",active,"In preparation or ready","blue"],["⌛","Preparing",preparing.length,"Kitchen working","orange"],["✓","Ready for pickup",ready.length,"Awaiting handoff","green"],["▣","Completed today",done.length,"Finished orders","purple"]];
@@ -47,7 +52,7 @@ function render(){
  document.getElementById("board").innerHTML=lanes.map(l=>'<section class="queue-lane"><div class="queue-lane-head"><span class="queue-lane-icon '+l[0]+'">'+l[1]+'</span><div><strong>'+l[2]+'</strong><span>'+l[3]+'</span></div><b>'+l[4].length+'</b></div><div class="queue-lane-body">'+(l[4].map(card).join("")||'<div class="queue-empty">No orders in this lane</div>')+'</div></section>').join("");
 }
 render();
-setInterval(()=>{let next=orders.find(o=>o.status==="Preparing");if(next)next.status="Ready";else{next=orders.find(o=>o.status==="Ready");if(next)next.status="Completed"}if(next){render();document.getElementById("updated").textContent="Updated at "+new Date().toLocaleTimeString("en-PH",{hour:"2-digit",minute:"2-digit",second:"2-digit"})}},15000);
+setInterval(()=>{let next=orders.find(o=>o.status==="Preparing");if(next)next.status="Ready";else{next=orders.find(o=>o.status==="Ready");if(next)next.status="Completed"}if(next){saveOrders();render();document.getElementById("updated").textContent="Updated at "+new Date().toLocaleTimeString("en-PH",{hour:"2-digit",minute:"2-digit",second:"2-digit"})}},15000);
 </script>
 </body></html>`);
 }
