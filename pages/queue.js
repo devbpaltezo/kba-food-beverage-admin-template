@@ -32,7 +32,7 @@ const initialOrders=[
 function loadOrders(){try{const saved=localStorage.getItem(ORDER_STORAGE_KEY);if(saved){const parsed=JSON.parse(saved);if(Array.isArray(parsed)&&parsed.length)return parsed}}catch(e){}return initialOrders.map(o=>({...o}))}
 let orders=loadOrders();
 function saveOrders(){try{localStorage.setItem(ORDER_STORAGE_KEY,JSON.stringify(orders))}catch(e){}}
-window.addEventListener("storage",e=>{if(e.key===ORDER_STORAGE_KEY){orders=loadOrders();render()}});
+// Queue is intentionally static until the page is manually refreshed.
 const money=n=>new Intl.NumberFormat("en-PH",{style:"currency",currency:"PHP",maximumFractionDigits:0}).format(n);
 const badge=s=>'<span class="status-badge '+({Completed:"badge-ready",Ready:"badge-ready",Preparing:"badge-pending"}[s]||"badge-low")+'">'+s+'</span>';
 function updateTimestamp(){document.getElementById("updated").textContent="Updated at "+new Date().toLocaleTimeString("en-PH",{hour:"2-digit",minute:"2-digit",second:"2-digit"})}
@@ -43,7 +43,6 @@ function render(){
  document.getElementById("board").innerHTML=lanes.map(l=>'<section class="queue-lane"><div class="queue-lane-head"><span class="queue-lane-icon '+l[0]+'">'+l[1]+'</span><div><strong>'+l[2]+'</strong><span>'+l[3]+'</span></div><b>'+l[4].length+'</b></div><div class="queue-lane-body">'+(l[4].map(card).join("")||'<div class="queue-empty">No orders in this lane</div>')+'</div></section>').join("");
 }
 render();
-setInterval(()=>{orders=loadOrders();render()},3000);
 </script>
 </body></html>`);
 }
