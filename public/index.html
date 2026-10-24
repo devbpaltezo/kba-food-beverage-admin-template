@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ServeFlow — Food & Beverage Management</title>
+<meta name="description" content="Demo food and beverage ordering, inventory, POS and analytics for cafes, restaurants and fast-food businesses.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<div class="demo-ribbon"><span class="demo-dot"></span> FOR DEMO PURPOSES ONLY <span class="ribbon-sep">•</span> Mock data — changes reset when you refresh</div>
+<div class="app-shell">
+<aside class="sidebar" id="sidebar">
+<div class="brand"><div class="brand-mark">S<span>✳</span></div><div><div class="brand-name">serveflow</div><div class="brand-sub">FOOD SERVICE OS</div></div><button class="icon-btn sidebar-close" id="closeSidebar" aria-label="Close menu">×</button></div>
+<div class="business-picker"><div class="business-avatar" id="businessAvatar">C</div><div class="business-meta"><strong id="businessName">Coastal Coffee</strong><span id="businessTypeLabel">Cafe demo</span></div><select id="businessType" aria-label="Business type"><option value="cafe">Cafe</option><option value="restaurant">Restaurant</option><option value="fastfood">Fast-food chain</option></select></div>
+<div class="nav-caption">WORKSPACE</div>
+<nav class="nav-list" id="mainNav">
+<button class="nav-item active" data-view="overview"><span class="nav-icon">▦</span>Overview</button>
+<button class="nav-item" data-view="inventory"><span class="nav-icon">▤</span>Inventory<span class="nav-count" id="lowStockNav">4</span></button>
+<button class="nav-item" data-view="ordering"><span class="nav-icon">☷</span>Ordering</button>
+<button class="nav-item" data-view="pos"><span class="nav-icon">▣</span>Point of Sale</button>
+<button class="nav-item" data-view="sales"><span class="nav-icon">↗</span>Sales Reports</button>
+<div class="nav-caption premium-caption">PREMIUM TOOLS <span>PRO</span></div>
+<button class="nav-item" data-view="reports"><span class="nav-icon">▥</span>Business Reports<span class="premium-dot"></span></button>
+<button class="nav-item" data-view="analytics"><span class="nav-icon">⌁</span>Menu Analytics<span class="premium-dot"></span></button>
+<button class="nav-item" data-view="staff"><span class="nav-icon">♙</span>Staff & Payroll<span class="premium-dot"></span></button>
+<button class="nav-item" data-view="users"><span class="nav-icon">♧</span>User Management<span class="premium-dot"></span></button>
+<button class="nav-item" data-view="support"><span class="nav-icon">♡</span>Support Tickets<span class="premium-dot"></span></button>
+</nav>
+<div class="sidebar-bottom"><div class="upgrade-card"><div class="upgrade-icon">✦</div><strong>Do more with Premium</strong><p>Unlock deeper insights and team tools.</p><button id="upgradeBtn">Explore Premium <span>→</span></button></div><div class="profile-row"><div class="profile-avatar">BP</div><div class="profile-info"><strong>Demo Admin</strong><span>Store administrator</span></div><button class="more-btn" title="Demo profile">•••</button></div></div>
+</aside>
+<div class="sidebar-scrim" id="sidebarScrim"></div>
+<main class="main-area">
+<header class="topbar"><div class="topbar-left"><button class="icon-btn mobile-menu" id="openSidebar" aria-label="Open menu">☰</button><div class="breadcrumb">Workspace <span>/</span> <strong id="breadcrumbCurrent">Overview</strong></div></div><div class="topbar-right"><div class="date-chip"><span>◷</span> <span id="todayLabel">Today</span></div><button class="icon-btn notification-btn" aria-label="Notifications" id="notificationsBtn">♧<i></i></button><div class="topbar-avatar">BP</div></div></header>
+<div class="page-wrap">
+<div class="page-heading"><div><div class="eyebrow" id="pageEyebrow">YOUR BUSINESS AT A GLANCE</div><h1 id="pageTitle">Good morning, Admin <span class="wave">✳</span></h1><p id="pageDescription">Here’s what’s happening at Coastal Coffee today.</p></div><div class="heading-actions"><button class="btn btn-light" id="quickOrderBtn">＋ New order</button><button class="btn btn-primary" id="quickPosBtn"><span>▣</span> Open POS</button></div></div>
+<div id="viewContent"></div>
+<footer class="page-footer"><span>ServeFlow <b>•</b> Food & Beverage Management</span><span>Demo environment <span class="footer-dot"></span></span></footer>
+</div>
+</main>
+</div>
+<div class="toast-stack" id="toastStack" aria-live="polite"></div>
+<div class="modal-backdrop" id="modalBackdrop"><section class="modal" id="modalContent" role="dialog" aria-modal="true"></section></div>
+<script src="/app.js"></script>
+</body></html>
