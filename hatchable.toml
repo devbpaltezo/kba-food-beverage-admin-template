@@ -1,0 +1,5 @@
+# Hatchable project manifest. This file marks the folder as a
+# Hatchable project and declares the services it uses.
+# Reference: https://hatchable.com/docs/developers/config
+name = "Food & Beverage Management System"
+description = "A dynamic demo admin system for cafes, restaurants, and fast-food businesses, with Standard and Premium feature sets. Static mock data only; no backend or database integration."
